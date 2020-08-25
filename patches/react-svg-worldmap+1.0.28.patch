@@ -1,0 +1,34 @@
+diff --git a/node_modules/react-svg-worldmap/dist/WorldMap.d.ts b/node_modules/react-svg-worldmap/dist/WorldMap.d.ts
+index fa31cfb..6876c4d 100644
+--- a/node_modules/react-svg-worldmap/dist/WorldMap.d.ts
++++ b/node_modules/react-svg-worldmap/dist/WorldMap.d.ts
+@@ -1,7 +1,7 @@
+ import React from "react";
+ interface IData {
+     country: string;
+-    value: number;
++    value: number | string;
+ }
+ interface ICountryContext {
+     country: string;
+diff --git a/node_modules/react-svg-worldmap/dist/react-svg-worldmap.esm.js b/node_modules/react-svg-worldmap/dist/react-svg-worldmap.esm.js
+index c81b842..9b0a197 100644
+--- a/node_modules/react-svg-worldmap/dist/react-svg-worldmap.esm.js
++++ b/node_modules/react-svg-worldmap/dist/react-svg-worldmap.esm.js
+@@ -1,4 +1,4 @@
+-import React, { useState, useLayoutEffect } from 'react';
++import React, { useState, useLayoutEffect, useEffect } from 'react';
+ import { geoMercator, geoPath } from 'd3-geo';
+ import { PathTooltip } from 'react-path-tooltip';
+ import { PathMarker } from 'react-path-marker';
+@@ -1811,7 +1811,9 @@ var WorldMap = function WorldMap(props) {
+         width = _useState[0],
+         setWidth = _useState[1];
+ 
+-    useLayoutEffect(function () {
++    var useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
++
++    useIsomorphicLayoutEffect(function () {
+       var updateWidth = function updateWidth() {
+         setWidth(window.innerWidth);
+       };
