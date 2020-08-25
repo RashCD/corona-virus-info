@@ -1,17 +1,5 @@
-import { addDays, formatISO, subDays } from 'date-fns'
+import { format } from 'date-fns'
 
-export const dateNowISO = (): string => {
-  return convertDateISO(new Date())
-}
-
-export const convertDateISO = (dateToConvert: number | Date): string => {
-  return formatISO(dateToConvert)
-}
-
-export const dateOneDayBefore = (targetDate: number | Date): Date => {
-  return subDays(targetDate, 1)
-}
-
-export const dateOneDayAfter = (targetDate: number | Date): Date => {
-  return addDays(targetDate, 1)
+export const formatDate = (date: Date | string): string => {
+  return format(new Date(date), 'do MMM yyyy')
 }
