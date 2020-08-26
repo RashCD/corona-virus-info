@@ -8,12 +8,12 @@ interface CardProps extends BoxProps {
 
 const Card = ({ title = 'test', description, children, ...rest }: CardProps): JSX.Element => {
   return (
-    <Box p={2} shadow="sm" borderWidth="1px" rounded="lg" w="auto" minW="2xs" minH={20} {...rest}>
-      <Text textAlign="center" fontSize="md">
+    <Box p={2} shadow="sm" borderWidth="1px" rounded="lg" w="auto" {...rest}>
+      <Text textAlign="center" fontSize={['xs', 'sm', 'md']}>
         {title}
       </Text>
       <Divider />
-      <Text textAlign="center" fontSize="6xl" fontWeight="medium">
+      <Text textAlign="center" fontSize={['md', '2xl', '4xl']} fontWeight="medium">
         {typeof description === 'number' ? formatNumber(description) : description}
       </Text>
       {children}

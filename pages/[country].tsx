@@ -2,12 +2,12 @@ import {
   Button,
   Divider,
   Flex,
+  Grid,
   Icon,
   Input,
   InputGroup,
   InputRightElement,
   Stack,
-  Text,
 } from '@chakra-ui/core'
 import styled from '@emotion/styled'
 import CountryPopulation from 'country-json/src/country-by-population.json'
@@ -53,11 +53,13 @@ type CountryPopType = {
   population: number | null
 }
 
-const FlexContainer = styled(Flex)`
-  div > svg {
-    position: absolute;
-    top: -50px;
-    left: calc(calc(100vw / 2) - calc(500px / 2));
+const MapContainer = styled(Flex)`
+  div {
+    background-color: transparent !important;
+
+    svg {
+      align-self: center;
+    }
   }
 `
 
@@ -80,7 +82,7 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
 
   const countryPopFormat = formatNumber(countryPop[0].population ?? 0)
 
-  const MapData = [{ country: props.data[0].CountryCode, value: countryPopFormat }]
+  const mapData = [{ country: props.data[0].CountryCode, value: countryPopFormat }]
 
   const stylingFunction = () => {
     return {
@@ -106,18 +108,15 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
 
   const StackComponent: React.FC = ({ children }): JSX.Element => {
     return (
-      <Stack
-        isInline
-        spacing={3}
+      <Grid
+        templateColumns="repeat(auto-fit, minmax(100px, 200px))"
+        gap={3}
         w="full"
-        flex={1}
+        justifyContent="center"
         py={5}
-        justify="center"
-        align="center"
-        flexWrap="wrap"
       >
         {children}
-      </Stack>
+      </Grid>
     )
   }
 
@@ -128,28 +127,29 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <FlexContainer
+      <Flex
         w="full"
-        h="40vh"
+        h={['40vh', '50vh']}
         bg="blue.300"
         boxShadow="sm"
         justify="center"
-        align="flex-end"
-        pt={8}
+        align="center"
         mb={5}
         pos="relative"
       >
-        {MapData && (
-          <WorldMap
-            valuePrefix="population"
-            size="lg"
-            data={MapData}
-            styleFunction={stylingFunction}
-          />
-        )}
+        <MapContainer>
+          {mapData && (
+            <WorldMap
+              valuePrefix="population"
+              size="lg"
+              data={mapData}
+              styleFunction={stylingFunction}
+            />
+          )}
+        </MapContainer>
         <Stack boxShadow="md" pos="absolute" bottom={-48 / 2}>
           <form onSubmit={handleClick}>
-            <InputGroup w="xs" size="lg">
+            <InputGroup w={['15rem', '20rem', '25rem']} size="lg">
               <Input
                 placeholder="Search By Country"
                 value={inputCountry}
@@ -163,24 +163,16 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
             </InputGroup>
           </form>
         </Stack>
-      </FlexContainer>
+      </Flex>
       <StackComponent>
         <Card title="New Confirmed" description={NewConfirmed} />
         <Card title="New Deaths" description={NewDeaths} />
-        <Card title="New Recovered" description={NewRecovered} pos="relative">
-          <Text
-            pos="absolute"
-            right={-30}
-            bottom={-30}
-            fontSize="sm"
-            color="gray.600"
-            fontStyle="italic"
-          >
-            * Date as of {formatDate(DateLatest)}
-          </Text>
-        </Card>
+        <Card title="New Recovered" description={NewRecovered} />
       </StackComponent>
-      <Divider w="80%" display="flex" alignSelf="center" />
+      <Flex fontSize="sm" color="gray.600" fontStyle="italic" justifyContent="flex-end" mr={20}>
+        * Date as of {formatDate(DateLatest)}
+      </Flex>
+      <Divider w="80%" mt={0} display="flex" alignSelf="center" />
       <StackComponent>
         <Card title="Total Confirmed" description={TotalConfirmed} />
         <Card title="Total Deaths" description={TotalDeaths} />
