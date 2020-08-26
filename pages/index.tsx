@@ -1,8 +1,16 @@
-import { Flex, Icon, Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/core'
+import { Flex, Text } from '@chakra-ui/core'
 import Head from 'next/head'
-import Card from '../components/Card'
+import { WorldMap } from 'react-svg-worldmap'
+import CountryInput from '../components/CountryInput'
+import MapContainer from '../components/MapContainer'
 
 export default function Home(): JSX.Element {
+  const mapData = [
+    { country: 'cn', value: 1 }, // china
+    { country: 'in', value: 2 }, // india
+    { country: 'us', value: 3 }, // united states
+  ]
+
   return (
     <Flex minH="100vh" direction="column">
       <Head>
@@ -10,33 +18,26 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex w="full" h="40vh" bg="blue.300" boxShadow="xl" justify="center" align="flex-end" py={8}>
-        <Stack>
-          <InputGroup w="xs">
-            <Input placeholder="Search By Country" />
-            <InputRightElement>
-              <Icon name="search-2" />
-            </InputRightElement>
-          </InputGroup>
-        </Stack>
-      </Flex>
-      <Stack
-        isInline
-        spacing={3}
-        w="full"
-        flex={1}
-        py={10}
-        justify="center"
-        align="center"
-        flexWrap="wrap"
+      <Flex
+        w="100vw"
+        h="100vh"
+        bg="blue.300"
+        justifyContent="center"
+        alignItems="center"
+        direction="column"
+        pos="relative"
       >
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-      </Stack>
+        <Flex pos="absolute" top={0} w="full" alignItems="center" direction="column">
+          <Text fontSize={['2xl', '4xl', '6xl']} fontWeight={700}>
+            COVID19 INFO
+          </Text>
+          <Text fontSize={['md', 'lg', 'xl']}>All The Info You Will Ever Need</Text>
+        </Flex>
+        <MapContainer>
+          <WorldMap valuePrefix="population" size="lg" data={mapData} />
+        </MapContainer>
+        <CountryInput />
+      </Flex>
     </Flex>
   )
 }
