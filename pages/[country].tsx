@@ -20,6 +20,8 @@ import Card from '../components/Card'
 import api from '../utils/api'
 import { formatDate } from '../utils/date'
 import { formatNumber } from '../utils/number'
+import MapContainer from '../components/MapContainer'
+import CountryInput from '../components/CountryInput'
 
 interface IListOfCountries {
   Country: string
@@ -53,16 +55,6 @@ type CountryPopType = {
   population: number | null
 }
 
-const MapContainer = styled(Flex)`
-  div {
-    background-color: transparent !important;
-
-    svg {
-      align-self: center;
-    }
-  }
-`
-
 const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.Element => {
   const {
     NewConfirmed,
@@ -73,8 +65,6 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
     TotalRecovered,
     Date: DateLatest,
   } = props.data[0]
-  const router = useRouter()
-  const [inputCountry, setInputCountry] = useState(props.country)
 
   const countryPop = (CountryPopulation as CountryPopType[]).filter((data) =>
     new RegExp(data.country, 'gi').test(props.data[0].Country)
@@ -95,17 +85,6 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
     }
   }
 
-  const handleClick = (e: MouseEvent<HTMLButtonElement> | FormEvent) => {
-    e.preventDefault()
-    router.push(inputCountry)
-  }
-
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const smallCap = e.target.value.toLowerCase()
-    const sanitizeWord = smallCap.split(' ').join('-')
-    setInputCountry(sanitizeWord)
-  }
-
   const StackComponent: React.FC = ({ children }): JSX.Element => {
     return (
       <Grid
@@ -113,7 +92,8 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
         gap={3}
         w="full"
         justifyContent="center"
-        py={5}
+        pt={4}
+        pb={2}
       >
         {children}
       </Grid>
@@ -134,7 +114,7 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
         boxShadow="sm"
         justify="center"
         align="center"
-        mb={5}
+        mb={10}
         pos="relative"
       >
         <MapContainer>
@@ -148,36 +128,25 @@ const CountryInfo = (props: { data: ICountriesStat[]; country: string }): JSX.El
           )}
         </MapContainer>
         <Stack boxShadow="md" pos="absolute" bottom={-48 / 2}>
-          <form onSubmit={handleClick}>
-            <InputGroup w={['15rem', '20rem', '25rem']} size="lg">
-              <Input
-                placeholder="Search By Country"
-                value={inputCountry}
-                onChange={handleOnChange}
-              />
-              <InputRightElement>
-                <Button onClick={handleClick} size="lg">
-                  <Icon name="search-2" />
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-          </form>
+          <CountryInput defaultCountry={props.country} />
         </Stack>
       </Flex>
-      <StackComponent>
-        <Card title="New Confirmed" description={NewConfirmed} />
-        <Card title="New Deaths" description={NewDeaths} />
-        <Card title="New Recovered" description={NewRecovered} />
-      </StackComponent>
-      <Flex fontSize="sm" color="gray.600" fontStyle="italic" justifyContent="flex-end" mr={20}>
-        * Date as of {formatDate(DateLatest)}
+      <Flex maxW="800px" w="full" direction="column" alignSelf="center">
+        <StackComponent>
+          <Card title="New Confirmed" description={NewConfirmed} />
+          <Card title="New Deaths" description={NewDeaths} />
+          <Card title="New Recovered" description={NewRecovered} />
+        </StackComponent>
+        <Flex fontSize="xs" color="gray.600" fontStyle="italic" justifyContent="flex-end" mr={20}>
+          * Date as of {formatDate(DateLatest)}
+        </Flex>
+        <Divider w="80%" mt={0} display="flex" alignSelf="center" />
+        <StackComponent>
+          <Card title="Total Confirmed" description={TotalConfirmed} />
+          <Card title="Total Deaths" description={TotalDeaths} />
+          <Card title="Total Recovered" description={TotalRecovered} />
+        </StackComponent>
       </Flex>
-      <Divider w="80%" mt={0} display="flex" alignSelf="center" />
-      <StackComponent>
-        <Card title="Total Confirmed" description={TotalConfirmed} />
-        <Card title="Total Deaths" description={TotalDeaths} />
-        <Card title="Total Recovered" description={TotalRecovered} />
-      </StackComponent>
     </Flex>
   )
 }
